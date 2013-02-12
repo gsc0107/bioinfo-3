@@ -1,5 +1,9 @@
 #!/usr/bin/python
 
+# codes in "bioinfo" are under the MIT License
+# Copyright (c) 2013 Jean-Etienne Morlighem <jem.nvnt@gmail.com>
+# https://github.com/jem-gh/bioinfo
+
 
 
 from bioinfo import *
