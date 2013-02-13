@@ -6,6 +6,8 @@
 
 
 
+from __future__ import division
+
 import re           # for "transcribe" (assertion)
 
 
@@ -63,6 +65,34 @@ def transcribe(seq):
             [pos.start() for pos in re.finditer("u", result)])
     
     print "transcribe result:"
+    print result
+    
+    return result
+
+
+
+def GCcontent(seq):
+    """ return the GC content in % of a nucleotide sequence """
+    
+    if not seq:
+        print "GCcontent: no sequence provided"
+        return None
+    
+    assert isinstance(seq, str)
+    
+    try:
+        a,c,g,t,u = countNucleotides(seq)
+    except TypeError:
+        print "GCcontent: sequence not valid"
+        return False
+    
+    result = (c + g) / (a + c + g + t + u) * 100
+    
+    # due to the Python floating-point approximation issue, assertion is made 
+    # by comparing results to an acceptable error margin
+    assert abs(result + ((a+t+u)/(a+c+g+t+u)*100) - 100) <= 0.00000000001
+    
+    print "GCcontent result:"
     print result
     
     return result

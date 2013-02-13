@@ -9,8 +9,9 @@
 from bioinfo import *
 
 import unittest
-import random           # for test_countNucleotides, test_transcribe
-import re               # for test_transcribe
+import random           # for test_countNucleotides, test_transcribe, test_GCcontent
+import re               # for test_countNucleotides, test_transcribe
+
 
 
 class TestBioinfo(unittest.TestCase):
@@ -55,6 +56,23 @@ class TestBioinfo(unittest.TestCase):
                 self.assertEqual(posT, posU)
         
         print "transcribe test ... OK"
+    
+    
+    def test_GCcontent(self):
+        self.assertIs(GCcontent(""), None)
+        self.assertIs(GCcontent("acgtu"), False)
+        
+        self.assertRaises(AssertionError, GCcontent, (987))
+        self.assertRaises(AssertionError, GCcontent, ("> !! not a seq"))
+        
+        for n in range(0, 1001):
+            sequence = [random.choice("cg") for i in range(n)]
+            sequence += [random.choice("at") for i in range(1000-n)]
+            random.shuffle(sequence)
+            sequence = ''.join([x for x in sequence])
+            self.assertAlmostEqual(GCcontent(sequence), n / 10.)
+        
+        print "GCcontent test ... OK"
 
 
 
