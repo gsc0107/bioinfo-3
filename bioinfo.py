@@ -6,6 +6,10 @@
 
 
 
+import re           # for "transcribe" (assertion)
+
+
+
 def countNucleotides(seq):
     """ simple nucleotide counting function for DNA or RNA sequences without 
         gap nor nucleotide ambiguity """
@@ -13,6 +17,8 @@ def countNucleotides(seq):
     if not seq:
         print "countNucleotides: no sequence provided"
         return None
+    
+    assert isinstance(seq, str)
     
     seq = seq.lower()
     
@@ -33,5 +39,33 @@ def countNucleotides(seq):
     print "{:>5} {:>5} {:>5} {:>5} {:>5}".format(a,c,g,t,u)
     
     return a, c, g, t, u
+
+
+
+def transcribe(seq):
+    """ Transcribed a DNA sequence into its corresponding RNA sequence """
+    
+    if not seq:
+        print "transcribe: no sequence provided"
+        return None
+    
+    assert isinstance(seq, str) and countNucleotides(seq)
+    
+    seq = seq.lower()
+    
+    if "u" in seq:
+        print "transcribe: U already in the sequence"
+        return False
+    
+    result = seq.replace("t", "u")
+    
+    assert ([pos.start() for pos in re.finditer("t", seq)] == 
+            [pos.start() for pos in re.finditer("u", result)])
+    
+    print "transcribe result:"
+    print result
+    
+    return result
+
 
 
