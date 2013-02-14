@@ -73,6 +73,44 @@ class TestBioinfo(unittest.TestCase):
             self.assertAlmostEqual(GCcontent(sequence), n / 10.)
         
         print "GCcontent test ... OK"
+    
+    
+    def test_complement(self):
+        self.assertIs(complement(""), None)
+        self.assertIs(complement("acgtu"), False)
+        
+        self.assertRaises(AssertionError, complement, (178439246))
+        self.assertRaises(AssertionError, complement, ('"@ not a seq'))
+        
+        for d in [("acgt", "tgca"), ("acgu", "ugca")]:
+            seq, comp = "", ""
+            for length in [10, 100, 1000, 10000]:
+                for n in range(length):
+                    nuc = random.randint(0,3)
+                    seq  += d[0][nuc]
+                    comp += d[1][nuc]
+                self.assertEqual(complement(seq), comp)
+        
+        print "complement test ... OK"
+    
+    
+    def test_reverse_complement(self):
+        self.assertIs(reverse_complement(""), None)
+        self.assertIs(reverse_complement("acgtu"), False)
+        
+        self.assertRaises(AssertionError, reverse_complement, (-356))
+        self.assertRaises(AssertionError, reverse_complement, ('"@ not a seq'))
+        
+        for d in [("acgt", "tgca"), ("acgu", "ugca")]:
+            seq, revcomp = "", ""
+            for length in [10, 100, 1000, 10000]:
+                for n in range(length):
+                    nuc = random.randint(0,3)
+                    seq     += d[0][nuc]
+                    revcomp  = d[1][nuc] + revcomp
+                self.assertEqual(reverse_complement(seq), revcomp)
+        
+        print "reverse_complement test ... OK"
 
 
 

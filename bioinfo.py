@@ -9,6 +9,7 @@
 from __future__ import division
 
 import re           # for "transcribe" (assertion)
+from string import maketrans        # for "complement"
 
 
 
@@ -96,6 +97,58 @@ def GCcontent(seq):
     print result
     
     return result
+
+
+
+def complement(seq):
+    """ return the complement of a DNA or RNA sequence """
+    
+    if not seq:
+        print "complement: no sequence provided"
+        return None
+    
+    assert isinstance(seq, str)
+    
+    try:
+        a,c,g,t,u = countNucleotides(seq)
+    except TypeError:
+        print "complement: sequence not valid"
+        return False
+    
+    in_seq, out_seq  = ("acgu", "ugca") if u else ("acgt", "tgca")
+    result = seq.lower().translate(maketrans(in_seq, out_seq))
+    
+    assert countNucleotides(result) in [(t, g, c, a, u), (u, g, c, t, a)]
+    
+    print "complement result:"
+    print result
+    
+    return result
+
+
+
+def reverse_complement(seq):
+    """ return the reverse complement of a DNA or RNA sequence """
+    
+    if not seq:
+        print "reverse_complement: no sequence provided"
+        return None
+    
+    assert isinstance(seq, str)
+    
+    result_c = complement(seq)
+    if result_c:
+        result_rc = result_c[::-1]
+    else:
+        print "reverse_complement: sequence not valid"
+        return False
+    
+    assert complement(result_rc)[::-1] == seq.lower()
+    
+    print "reverse_complement result:"
+    print result_rc
+    
+    return result_rc
 
 
 
