@@ -157,3 +157,34 @@ def reverse_complement(seq, type_nuc="DNA"):
 
 
 
+def hammingDistance(seq1, seq2):
+    """ return the Hamming distance (number of differences) between two DNA or 
+        RNA sequences of the same length """
+    
+    assert isinstance(seq1, str) and isinstance(seq2, str)
+    
+    if not (seq1 and seq2): # empty strings
+        print "hammingDistance: two sequences needed"
+        return None
+    
+    assert countNucleotides(seq1) and countNucleotides(seq2)
+    
+    if len(seq1) != len(seq2):
+        print "hammingDistance: sequences do not have the same length"
+        return False
+    
+    result = 0
+    
+    for i in range(len(seq1)):
+        if seq1[i] != seq2[i]:
+            result += 1
+    
+    assert 0 <= result <= len(seq1)
+    
+    print "hammingDistance result:"
+    print result
+    
+    return result
+
+
+

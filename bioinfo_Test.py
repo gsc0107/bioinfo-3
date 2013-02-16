@@ -9,8 +9,68 @@
 from bioinfo import *
 
 import unittest
-import random           # for test_countNucleotides, test_transcribe, test_GCcontent
+import random           # for "test_countNucleotides", "test_transcribe", 
+                        # "test_GCcontent", "mutateSeq"
 import re               # for test_countNucleotides, test_transcribe
+
+
+
+def mutateSeq(seq, num_mut, type_nuc="DNA"):
+    """ introduce x number of random point mutation(s) (num_mut) in a DNA or 
+        RNA sequence. 
+        'seq' can be a list or a string and a list/string will be returned 
+        respectively. """
+    
+    assert num_mut >= 0
+    
+    if not seq: # empty string/list
+        print "mutateSeq: no sequence provided"
+        return None
+    
+    seq_length = len(seq)
+    
+    if seq_length < num_mut:
+        print "mutateSeq: number of mutations higher than length of sequence "
+        return False
+    
+    if "t" in seq and "u"in seq:
+        print "mutateSeq: T and U found in sequence"
+        return False
+    
+    if isinstance(seq, str):
+        isString = True
+        seq = [x for x in seq]
+    elif isinstance(seq, list):
+        isString = False
+        seq = list(seq)
+    
+    pos_mutated = []
+    
+    if "u" in seq or (type_nuc=="RNA" and "t" not in seq):
+        nuc_dic = "acgu"
+    else:
+        nuc_dic = "acgt"
+    
+    while num_mut > 0:
+        pos = random.randrange(0, seq_length)
+        
+        if pos not in pos_mutated:
+            nuc_ori = nuc_mut = seq[pos]
+            
+            while nuc_mut == nuc_ori:
+                nuc_mut = random.choice(nuc_dic)
+            
+            seq[pos] = nuc_mut
+            
+            pos_mutated.append(pos)
+            num_mut -= 1
+    
+    assert seq_length == len(seq)
+    
+    if isString:
+        seq = ''.join(seq)
+    
+    return seq
 
 
 
@@ -118,6 +178,27 @@ class TestBioinfo(unittest.TestCase):
                 self.assertEqual(reverse_complement(seq, type_nuc), revcomp)
         
         print "reverse_complement test ... OK"
+    
+    
+    #@unittest.skip("skip ... test_hammingDistance")
+    def test_hammingDistance(self):
+        for n in [("a",""), ("","a"), ("","")]:
+            self.assertIs(hammingDistance(*n), None)
+        self.assertRaises(AssertionError, hammingDistance, *("ttuu", "acgt"))
+        
+        self.assertRaises(AssertionError, hammingDistance, *(-356, "acgt"))
+        self.assertRaises(AssertionError, hammingDistance, *('"@ not a seq', 'acg'))
+        
+        self.assertIs(hammingDistance("aaa", "aa"), False)
+        
+        for d in ["acgt", "acgu"]:
+            seq = ''.join(random.choice(d) for n in range(100))
+            
+            for errors in range(101):
+                seq_mutated = mutateSeq(seq, errors)
+                self.assertEqual(hammingDistance(seq, seq_mutated), errors)
+        
+        print "hammingDistance test ... OK"
 
 
 
