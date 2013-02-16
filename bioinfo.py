@@ -17,11 +17,11 @@ def countNucleotides(seq):
     """ simple nucleotide counting function for DNA or RNA sequences without 
         gap nor nucleotide ambiguity """
     
-    if not seq:
+    assert isinstance(seq, str)
+    
+    if not seq: # empty string
         print "countNucleotides: no sequence provided"
         return None
-    
-    assert isinstance(seq, str)
     
     seq = seq.lower()
     
@@ -48,11 +48,13 @@ def countNucleotides(seq):
 def transcribe(seq):
     """ Transcribed a DNA sequence into its corresponding RNA sequence """
     
-    if not seq:
+    assert isinstance(seq, str)
+    
+    if not seq: # empty string
         print "transcribe: no sequence provided"
         return None
     
-    assert isinstance(seq, str) and countNucleotides(seq)
+    assert countNucleotides(seq)
     
     seq = seq.lower()
     
@@ -75,11 +77,11 @@ def transcribe(seq):
 def GCcontent(seq):
     """ return the GC content in % of a nucleotide sequence """
     
-    if not seq:
+    assert isinstance(seq, str)
+    
+    if not seq: # empty string
         print "GCcontent: no sequence provided"
         return None
-    
-    assert isinstance(seq, str)
     
     try:
         a,c,g,t,u = countNucleotides(seq)
@@ -100,14 +102,14 @@ def GCcontent(seq):
 
 
 
-def complement(seq):
+def complement(seq, type_nuc="DNA"):
     """ return the complement of a DNA or RNA sequence """
     
-    if not seq:
+    assert isinstance(seq, str)
+    
+    if not seq: # empty string
         print "complement: no sequence provided"
         return None
-    
-    assert isinstance(seq, str)
     
     try:
         a,c,g,t,u = countNucleotides(seq)
@@ -115,7 +117,7 @@ def complement(seq):
         print "complement: sequence not valid"
         return False
     
-    in_seq, out_seq  = ("acgu", "ugca") if u else ("acgt", "tgca")
+    in_seq, out_seq  = ("acgu", "ugca") if (u or type_nuc=="RNA") else ("acgt", "tgca")
     result = seq.lower().translate(maketrans(in_seq, out_seq))
     
     assert countNucleotides(result) in [(t, g, c, a, u), (u, g, c, t, a)]
@@ -127,23 +129,26 @@ def complement(seq):
 
 
 
-def reverse_complement(seq):
+def reverse_complement(seq, type_nuc="DNA"):
     """ return the reverse complement of a DNA or RNA sequence """
-    
-    if not seq:
-        print "reverse_complement: no sequence provided"
-        return None
     
     assert isinstance(seq, str)
     
-    result_c = complement(seq)
+    if not seq: # empty string
+        print "reverse_complement: no sequence provided"
+        return None
+    
+    if "u" in seq.lower():
+        type_nuc = "RNA"
+    
+    result_c = complement(seq, type_nuc)
     if result_c:
         result_rc = result_c[::-1]
     else:
         print "reverse_complement: sequence not valid"
         return False
     
-    assert complement(result_rc)[::-1] == seq.lower()
+    assert complement(result_rc, type_nuc)[::-1] == seq.lower()
     
     print "reverse_complement result:"
     print result_rc

@@ -16,6 +16,7 @@ import re               # for test_countNucleotides, test_transcribe
 
 class TestBioinfo(unittest.TestCase):
     
+    #@unittest.skip("skip ... test_countNucleotides")
     def test_countNucleotides(self):
         self.assertIs(countNucleotides(""), None)
         self.assertIs(countNucleotides("tu"), False)
@@ -38,6 +39,7 @@ class TestBioinfo(unittest.TestCase):
         print "countNucleotides test ... OK"
     
     
+    #@unittest.skip("skip ... test_transcribe")
     def test_transcribe(self):
         self.assertIs(transcribe(""), None)
         self.assertIs(transcribe("acgu"), False)
@@ -58,6 +60,7 @@ class TestBioinfo(unittest.TestCase):
         print "transcribe test ... OK"
     
     
+    #@unittest.skip("skip ... test_GCcontent")
     def test_GCcontent(self):
         self.assertIs(GCcontent(""), None)
         self.assertIs(GCcontent("acgtu"), False)
@@ -75,6 +78,7 @@ class TestBioinfo(unittest.TestCase):
         print "GCcontent test ... OK"
     
     
+    #@unittest.skip("skip ... test_complement")
     def test_complement(self):
         self.assertIs(complement(""), None)
         self.assertIs(complement("acgtu"), False)
@@ -84,16 +88,18 @@ class TestBioinfo(unittest.TestCase):
         
         for d in [("acgt", "tgca"), ("acgu", "ugca")]:
             seq, comp = "", ""
+            type_nuc = "DNA" if d == ("acgt", "tgca") else "RNA"
             for length in [10, 100, 1000, 10000]:
                 for n in range(length):
                     nuc = random.randint(0,3)
                     seq  += d[0][nuc]
                     comp += d[1][nuc]
-                self.assertEqual(complement(seq), comp)
+                self.assertEqual(complement(seq, type_nuc), comp)
         
         print "complement test ... OK"
     
     
+    #@unittest.skip("skip ... test_reverse_complement")
     def test_reverse_complement(self):
         self.assertIs(reverse_complement(""), None)
         self.assertIs(reverse_complement("acgtu"), False)
@@ -103,12 +109,13 @@ class TestBioinfo(unittest.TestCase):
         
         for d in [("acgt", "tgca"), ("acgu", "ugca")]:
             seq, revcomp = "", ""
+            type_nuc = "DNA" if d == ("acgt", "tgca") else "RNA"
             for length in [10, 100, 1000, 10000]:
                 for n in range(length):
                     nuc = random.randint(0,3)
                     seq     += d[0][nuc]
                     revcomp  = d[1][nuc] + revcomp
-                self.assertEqual(reverse_complement(seq), revcomp)
+                self.assertEqual(reverse_complement(seq, type_nuc), revcomp)
         
         print "reverse_complement test ... OK"
 
