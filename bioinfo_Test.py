@@ -199,6 +199,23 @@ class TestBioinfo(unittest.TestCase):
                 self.assertEqual(hammingDistance(seq, seq_mutated), errors)
         
         print "hammingDistance test ... OK"
+    
+    
+    #@unittest.skip("skip ... test_findMotif")
+    def test_findMotif(self):
+        for n in [("a",""), ("","a"), ("","")]:
+            self.assertIs(findMotif(*n), None)
+        self.assertIs(findMotif("actg", "actgactg"), False)
+        
+        for n in [(3749,"actgactg"), ("actgactg",3749), (3749,-4)]:
+            self.assertRaises(AssertionError, findMotif, *n)
+        
+        self.assertEqual(findMotif("tttt", "ccc"), [])
+        self.assertEqual(findMotif("ATAT", "atat"), [1])
+        self.assertEqual(findMotif("atatat", "ATAT"), [1,3])
+        self.assertEqual(findMotif("uuuuuu", "u"), [1,2,3,4,5,6])
+        
+        print "findMotif test ... OK"
 
 
 

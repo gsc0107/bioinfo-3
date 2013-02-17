@@ -188,3 +188,36 @@ def hammingDistance(seq1, seq2):
 
 
 
+def findMotif(seq, motif):
+    """ return all beginning positions of a motif in a sequence """
+    
+    assert isinstance(seq, str) and isinstance(motif, str)
+    
+    if not (seq and motif): # empty strings
+        print "findMotif: two sequences needed"
+        return None
+    
+    if len(motif) > len(seq):
+        print "findMotif: motif length longer than the sequence length"
+        return False
+    
+    seq, motif = seq.lower(), motif.lower()
+    
+    positions = []
+    current_pos = 0
+    
+    while current_pos != -1:
+        current_pos = seq.find(motif, current_pos)
+        if current_pos != -1:
+            positions.append(current_pos+1)
+            current_pos += 1
+    
+    assert len(positions) <= (len(seq) - len(motif) + 1)
+    
+    print "findMotif result:"
+    print None if not positions else ' '.join(str(p) for p in positions)
+    
+    return positions
+
+
+
