@@ -11,6 +11,8 @@ from __future__ import division
 import re           # for "transcribe" (assertion)
 from string import maketrans        # for "complement"
 
+from bioinfoLibrary import RNA_CODON_TABLE
+
 
 
 def countNucleotides(seq):
@@ -218,6 +220,49 @@ def findMotif(seq, motif):
     print None if not positions else ' '.join(str(p) for p in positions)
     
     return positions
+
+
+
+def translation(seq):
+    """ return the protein sequence encoded by an RNA sequence (seq) """
+    
+    assert isinstance(seq, str)
+    
+    if not len(seq) >= 3: # sequence shorter than a codon
+        print "translation: an RNA sequence of at least 3 nucleotides is required"
+        return None
+    
+    try:
+        a,c,g,t,u = countNucleotides(seq)
+    except TypeError:
+        print "translation: not a valid RNA sequence"
+        return False
+    if t:
+        print "translation: sequence provided is DNA instead of RNA"
+        return False
+    
+    length = len(seq)
+    seq = seq.upper()
+    
+    result = ""
+    
+    for n in range(0, length, 3):
+        try:
+            aa = RNA_CODON_TABLE[ seq[n:n+3] ]
+        except KeyError:     # occurs if remaining RNA seq is less than 3 nucleotides 
+            break
+        
+        if aa == "*":
+            break
+        else:
+            result += aa
+    
+    assert len(result) <= length / 3
+    
+    print "translation result:"
+    print result if result else "No protein obtained from the RNA sequence"
+    
+    return result
 
 
 

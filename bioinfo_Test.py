@@ -13,6 +13,8 @@ import random           # for "test_countNucleotides", "test_transcribe",
                         # "test_GCcontent", "mutateSeq"
 import re               # for test_countNucleotides, test_transcribe
 
+from bioinfoLibrary import RNA_CODON_TABLE
+
 
 
 def mutateSeq(seq, num_mut, type_nuc="DNA"):
@@ -216,6 +218,29 @@ class TestBioinfo(unittest.TestCase):
         self.assertEqual(findMotif("uuuuuu", "u"), [1,2,3,4,5,6])
         
         print "findMotif test ... OK"
+    
+    
+    #@unittest.skip("skip ... test_translation")
+    def test_translation(self):
+        self.assertIs(translation(""), None)
+        self.assertIs(translation("acgtu"), False)
+        
+        self.assertRaises(AssertionError, translation, ([6]))
+        self.assertRaises(AssertionError, translation, ('not a seq'))
+        
+        self.assertIs(translation("ua"), None)
+        self.assertIs(translation("acgt"), False)
+        
+        for r in range(10):
+            for length in [1, 10, 100, 1000]:
+                rna, prot = "", ""
+                for i in range(length):
+                    codon = random.choice(RNA_CODON_TABLE.keys())
+                    rna += codon
+                    prot += RNA_CODON_TABLE[codon]
+                self.assertEqual(translation(rna), prot.split('*')[0])
+        
+        print "translation test ... OK"
 
 
 
